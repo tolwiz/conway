@@ -1,0 +1,31 @@
+#include <stdio.h>
+
+#define GRID_COLS 25
+#define GRID_ROWS 25
+#define ALIVE '*'
+#define DEAD '.'
+
+/* Translate the specified x,y grid point into the index in
+ * the linear array. This function implements wrapping, so
+ * both negative and positive coordinates that are out of the
+ * grid will wrap around. */
+int cell_to_index(int x, int y) {
+    if (x >= GRID_COLS) x = x % GRID_COLS;
+    if (y >= GRID_ROWS) y = y % GRID_ROWS;
+    
+}
+
+/* The function sets the specified cell at x,y to the specified state.*/
+void setcell(char *grid, int x, int y, int state) {
+    grid[y*GRID_COLS+x] = state;    
+}
+
+/* The function returns the state of the grid at x,y. */
+char getcell(char *grid, int x, int y) {
+    return grid[y*GRID_COLS+x];
+}
+
+int main(void) {
+    char grid[Cols*Rows];
+    setcell(grid, 10, 10, ALIVE);
+}
