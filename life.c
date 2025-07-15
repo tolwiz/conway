@@ -2,6 +2,7 @@
 
 #define GRID_COLS 20
 #define GRID_ROWS 20
+#define GRID_CELLS (GRID_COLS*GRID_ROWS)
 #define ALIVE '*'
 #define DEAD '.'
 
@@ -37,6 +38,7 @@ char get_cell(char *grid, int x, int y) {
 /* Show th grid on the screen, clearing the terminal using the
  * required VT100 escape sequence. */
 void print_grid(char *grid) {
+    printf("\x1b[3J\x1b[H\x1b[2J"); // Clear screen.
     for (int y = 0; y < GRID_ROWS;  y++) {
         for (int x = 0; x < GRID_COLS; x++) {
             printf("%c", get_cell(grid, x, y));
@@ -54,10 +56,30 @@ void set_grid(char *grid, char state) {
     }
 }
 
+/* Return the number of living cells neighbours of x,y. */
+int count_living_neighbours(char *grid, int x, int y) {
+    int alive = 0;
+    for (int yo = -1; yo <= 1; yo++) {
+        for (int xo = -1; xo <= 1; xo++) {
+            if (xo == 0 && yo == 0) continue;
+            if (get_cell(grid, x+xo, y+yo) == ALIVE) alive++;
+        }
+    }
+    return alive;
+}
+
+/* Compute the new state of Game of Life according to its rules. */
+void new_state(char *old, char *new) {
+        
+}
+
 int main(void) {
-    char grid[GRID_COLS*GRID_ROWS];
-    set_grid(grid, DEAD);
-    set_cell(grid, -1, 10, ALIVE);
-    print_grid(grid);
+    char old_grid[GRID_CELLS];
+    char new_grid[GRID_CELLS];
+    set_grid(old_grid, DEAD);
+    set_cell(old_grid, 10, 10, ALIVE);
+    set_cell(old_grid, 10, 11, ALIVE);
+    print_grid(old_grid);
+    printf("%d\n", count_living_neighbours(old_grid, 9, 10));
     return 0;
 }
