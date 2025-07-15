@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 
 #define GRID_COLS 20
 #define GRID_ROWS 20
@@ -69,8 +70,21 @@ int count_living_neighbours(char *grid, int x, int y) {
 }
 
 /* Compute the new state of Game of Life according to its rules. */
-void new_state(char *old, char *new) {
-        
+void compute_new_state(char *old, char *new) {
+    for (int y = 0; y < GRID_ROWS;  y++) {
+        for (int x = 0; x < GRID_COLS; x++) {
+            int n_alive = count_living_neighbours(old, x, y);
+            int new_state = DEAD;
+            if (get_cell(old, x, y) == ALIVE) {
+                if (n_alive == 2 || n_alive == 3)
+                    new_state = ALIVE;
+            } else {
+                if (n_alive == 3)
+                    new_state = ALIVE;
+            }
+            set_cell(new, x, y, new_state);
+        }
+    }
 }
 
 int main(void) {
@@ -79,7 +93,14 @@ int main(void) {
     set_grid(old_grid, DEAD);
     set_cell(old_grid, 10, 10, ALIVE);
     set_cell(old_grid, 10, 11, ALIVE);
-    print_grid(old_grid);
-    printf("%d\n", count_living_neighbours(old_grid, 9, 10));
+    set_cell(old_grid, 10, 12, ALIVE);
+    while(1) {
+        compute_new_state(old_grid, new_grid);
+        print_grid(new_grid);
+        sleep(1);
+        compute_new_state(new_grid, old_grid);
+        print_grid(old_grid);
+        sleep(1);
+    }
     return 0;
 }
